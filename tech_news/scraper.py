@@ -33,7 +33,33 @@ def scrape_next_page_link(html_content):
 
 # Requisito 4
 def scrape_news(html_content):
-    """Seu código deve vir aqui"""
+    selector = Selector(html_content)
+
+    news = {
+        'url': selector.css("link[rel='canonical']::attr(href)").get(),
+        'title': selector.css(".entry-title::text").get().strip(),
+        'timestamp': selector.css("li.meta-date::text").get(),
+        'writer': selector.css(".author a::text").get(),
+        'comments_count': selector.css(".post-comments-simple h5::text").get()
+        or 0,
+        'summary': selector.css(".entry-content p").xpath("string()").get()
+        .strip(),
+        'tags': selector.css(".post-tags a *::text").getall(),
+        'category': selector.css(".meta-category .label::text").get(),
+    }
+
+    return news
+
+# {
+#   "url": "https://blog.betrybe.com/novidades/noticia-bacana",
+#   "title": "Notícia bacana",
+#   "timestamp": "04/04/2021",
+#   "writer": "Eu",
+#   "comments_count": 4,
+#   "summary": "Algo muito bacana aconteceu",
+#   "tags": ["Tecnologia", "Esportes"],
+#   "category": "Ferramentas",
+# }
 
 
 # Requisito 5
